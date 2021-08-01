@@ -13,6 +13,11 @@ package org.terracottamc.taglib.util.nbt;
  */
 public class NBTBuilderException extends RuntimeException {
 
+    /**
+     * Creates a new {@link org.terracottamc.taglib.util.nbt.NBTBuilderException} with given message
+     *
+     * @param failedOnBuildObject which represents the name of the object which is involved in a conflict
+     */
     public NBTBuilderException(final String failedOnBuildObject) {
         super("The building attempt of " + failedOnBuildObject + " failed due to the provision of invalid data");
     }
