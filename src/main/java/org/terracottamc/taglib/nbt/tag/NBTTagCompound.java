@@ -1,8 +1,13 @@
 package org.terracottamc.taglib.nbt.tag;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import org.terracottamc.taglib.NBTBuilder;
+import org.terracottamc.taglib.nbt.io.NBTWriter;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.List;
@@ -44,21 +49,44 @@ public class NBTTagCompound implements INBTTagCompound {
 
     @Override
     public void write(final ByteBuf buffer, final ByteOrder byteOrder) {
+        final NBTWriter nbtWriter = new NBTBuilder()
+                .withIOBuffer(buffer)
+                .withByteOrder(byteOrder)
+                .buildWriter();
 
+        nbtWriter.writeTagCompound(this);
     }
 
     @Override
     public void write(final File file, final ByteOrder byteOrder) {
+        try (final FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            final ByteBuf buffer = PooledByteBufAllocator.DEFAULT.directBuffer();
 
+            this.write(buffer, byteOrder);
+
+            final int length = buffer.readableBytes();
+            final byte[] data = new byte[length];
+
+            buffer.readBytes(data);
+            buffer.release();
+
+            fileOutputStream.write(data);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void writeAndFlush(final ByteBuf buffer, final ByteOrder byteOrder) {
+        this.write(buffer, byteOrder);
+
         this.nbtMap.clear();
     }
 
     @Override
     public void writeAndFlush(final File file, final ByteOrder byteOrder) {
+        this.write(file, byteOrder);
+
         this.nbtMap.clear();
     }
 
