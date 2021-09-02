@@ -191,6 +191,11 @@ public class NBTTagCompound implements INBTTagCompound {
     }
 
     @Override
+    public List<?> getList(final String key) {
+        return (List<?>) this.nbtMap.get(key);
+    }
+
+    @Override
     public NBTTagCompound getChildTag(final String name) {
         return (NBTTagCompound) this.nbtMap.get(name);
     }

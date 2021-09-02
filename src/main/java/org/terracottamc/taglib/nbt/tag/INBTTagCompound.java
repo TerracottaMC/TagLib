@@ -222,6 +222,15 @@ public interface INBTTagCompound {
     int[] getIntArray(final String key);
 
     /**
+     * Retrieves the {@link java.util.List} value by its given key
+     *
+     * @param key which is needed to find the value
+     *
+     * @return a fresh {@link java.util.List} value
+     */
+    List<?> getList(final String key);
+
+    /**
      * Retrieves the {@link NBTTagCompound} child tag by its name
      *
      * @param name which is needed to find the child tag
